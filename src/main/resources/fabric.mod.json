@@ -3,9 +3,9 @@
 	"id": "novacoins",
 	"version": "${version}",
 	"name": "Nova Coins",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Adds a furnace to have a 1:10 ratio between Coins JE coins",
 	"authors": [
-		"Me!"
+		"Alerex!"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"alerex.novacoins.NovaCoins"
+		],
+		"client": [
+			"alerex.novacoins.NovaCoinsClient"
 		],
 		"fabric-datagen": [
 			"alerex.novacoins.NovaCoinsDataGenerator"

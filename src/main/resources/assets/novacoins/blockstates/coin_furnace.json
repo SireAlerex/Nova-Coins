@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "novacoins:block/coin_block" }
+  }
+}

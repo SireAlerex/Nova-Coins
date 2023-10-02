@@ -1,0 +1,13 @@
+{
+  "type": "novacoins:coin_recipe",
+  "ingredients": [
+    {
+      "item": "coinsje:gold_coin",
+      "count": 10
+    }
+  ],
+  "output": {
+    "item": "coinsje:diamond_coin",
+    "count": 1
+  }
+}
