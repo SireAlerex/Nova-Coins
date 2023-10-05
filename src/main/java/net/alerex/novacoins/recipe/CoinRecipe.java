@@ -84,7 +84,8 @@ public class CoinRecipe implements Recipe<SimpleInventory> {
 				}
 				Ingredient ing = Ingredient.fromJson(ingredientObject);
 
-				Integer count = gson.fromJson(object.get("count"), Integer.class);
+				JsonElement raw_count = object.get("count");
+				Integer count = raw_count != null ? gson.fromJson(raw_count, Integer.class) : 1;
 				IngredientStack ingredientStack = new IngredientStack(ing, count);
 				inputs.set(i, ingredientStack);
 			}

@@ -28,7 +28,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
 	protected final PropertyDelegate propertyDelegate;
 	private int progress = 0;
-	private int maxProgress = 200;
+	private int maxProgress = 100;
 	private int fuelTicks = 0;
 
 	public CoinFurnaceEntity(BlockPos pos, BlockState state) {
@@ -67,7 +67,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 
 	@Override
 	public Text getDisplayName() {
-		return Text.literal("Coin Block");
+		return Text.literal("Coin Furnace");
 	}
 
 	@Nullable
@@ -100,7 +100,6 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		if (world.isClient()) {
 			return;
 		}
-		NovaCoins.LOGGER.info("fuelTicks: " + entity.fuelTicks + " progress: " + entity.progress);
 		entity.fuelTicks = entity.fuelTicks == 0? 0 : entity.fuelTicks-1;
 
 		if (hasRecipe(entity)) {
@@ -108,7 +107,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 				Item fuel = entity.getItems().get(2).getItem();
 				Integer ticks = FuelRegistry.INSTANCE.get(fuel);
 				if (ticks != null) {
-					entity.fuelTicks += ticks;
+					entity.fuelTicks = ticks/2;
 					entity.removeStack(2, 1);
 				}
 			}
