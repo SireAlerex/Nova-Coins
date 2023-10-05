@@ -1,0 +1,13 @@
+{
+  "type": "novacoins:coin_recipe",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 1
+    }
+  ],
+  "output": {
+    "item": "coinsje:copper_coin",
+    "count": 1
+  }
+}
