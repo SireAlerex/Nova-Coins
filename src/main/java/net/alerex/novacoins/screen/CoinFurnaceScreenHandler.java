@@ -1,5 +1,6 @@
 package net.alerex.novacoins.screen;
 
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -46,12 +47,21 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 		if (slot.hasStack()) {
 			ItemStack originalStack = slot.getStack();
 			newStack = originalStack.copy();
+			// from furnace to player inventory
 			if (invSlot < this.inventory.size()) {
 				if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.insertItem(originalStack, 0, this.inventory.size(), false)){
-				return ItemStack.EMPTY;
+				// from player inventory to furnace
+			} else {
+				if (FuelRegistry.INSTANCE.get(slot.getStack().getItem()) != null) {
+					if (!this.insertItem(originalStack, 2, 3, false)) {
+						return ItemStack.EMPTY;
+					}
+				}
+				if (!this.insertItem(originalStack, 0, 1, false)) {
+					return ItemStack.EMPTY;
+				}
 			}
 
 			if (originalStack.isEmpty()) {
