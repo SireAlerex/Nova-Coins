@@ -16,13 +16,13 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"alerex.novacoins.NovaCoins"
+			"net.alerex.novacoins.NovaCoins"
 		],
 		"client": [
-			"alerex.novacoins.NovaCoinsClient"
+			"net.alerex.novacoins.NovaCoinsClient"
 		],
 		"fabric-datagen": [
-			"alerex.novacoins.NovaCoinsDataGenerator"
+			"net.alerex.novacoins.NovaCoinsDataGenerator"
 		]
 	},
 	"mixins": [

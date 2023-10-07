@@ -1,7 +1,7 @@
-package alerex.novacoins.block.custom;
+package net.alerex.novacoins.block.custom;
 
-import alerex.novacoins.block.entity.CoinFurnaceEntity;
-import alerex.novacoins.block.entity.ModBlockEntities;
+import net.alerex.novacoins.block.entity.CoinFurnaceEntity;
+import net.alerex.novacoins.block.entity.ModBlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;

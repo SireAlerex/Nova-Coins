@@ -1,7 +1,7 @@
-package alerex.novacoins;
+package net.alerex.novacoins;
 
-import alerex.novacoins.screen.CoinFurnaceScreen;
-import alerex.novacoins.screen.ModScreenHandlers;
+import net.alerex.novacoins.screen.CoinFurnaceScreen;
+import net.alerex.novacoins.screen.ModScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

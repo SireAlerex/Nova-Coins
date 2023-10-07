@@ -1,4 +1,4 @@
-package alerex.novacoins.mixin;
+package net.alerex.novacoins.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,4 +1,4 @@
-package alerex.novacoins.screen;
+package net.alerex.novacoins.screen;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

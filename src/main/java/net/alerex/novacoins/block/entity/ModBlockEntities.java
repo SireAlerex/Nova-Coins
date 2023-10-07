@@ -1,7 +1,7 @@
-package alerex.novacoins.block.entity;
+package net.alerex.novacoins.block.entity;
 
-import alerex.novacoins.NovaCoins;
-import alerex.novacoins.block.ModBlocks;
+import net.alerex.novacoins.NovaCoins;
+import net.alerex.novacoins.block.ModBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;

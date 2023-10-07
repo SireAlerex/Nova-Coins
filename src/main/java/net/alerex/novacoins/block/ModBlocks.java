@@ -1,8 +1,8 @@
-package alerex.novacoins.block;
+package net.alerex.novacoins.block;
 
-import alerex.novacoins.NovaCoins;
-import alerex.novacoins.block.custom.CoinFurnace;
-import alerex.novacoins.block.custom.CoinFurnace;
+import net.alerex.novacoins.NovaCoins;
+import net.alerex.novacoins.block.custom.CoinFurnace;
+import net.alerex.novacoins.block.custom.CoinFurnace;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;

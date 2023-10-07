@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "alerex.novacoins.mixin",
+	"package": "net.alerex.novacoins.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"NovaCoinsMixin"

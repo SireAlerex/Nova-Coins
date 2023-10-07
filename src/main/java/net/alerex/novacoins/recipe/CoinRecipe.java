@@ -1,7 +1,7 @@
-package alerex.novacoins.recipe;
+package net.alerex.novacoins.recipe;
 
 import com.google.gson.*;
-import alerex.novacoins.util.*;
+import net.alerex.novacoins.util.*;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;

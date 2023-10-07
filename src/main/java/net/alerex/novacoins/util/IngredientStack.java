@@ -1,4 +1,4 @@
-package alerex.novacoins.util;
+package net.alerex.novacoins.util;
 
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.Pair;

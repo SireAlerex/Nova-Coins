@@ -1,6 +1,6 @@
-package alerex.novacoins.recipe;
+package net.alerex.novacoins.recipe;
 
-import alerex.novacoins.NovaCoins;
+import net.alerex.novacoins.NovaCoins;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;

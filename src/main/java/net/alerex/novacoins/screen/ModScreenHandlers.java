@@ -1,6 +1,7 @@
-package alerex.novacoins.screen;
 
-import alerex.novacoins.NovaCoins;
+package net.alerex.novacoins.screen;
+
+import net.alerex.novacoins.NovaCoins;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.screen.ScreenHandlerType;
 

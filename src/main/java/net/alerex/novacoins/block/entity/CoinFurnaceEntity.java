@@ -1,8 +1,7 @@
-package alerex.novacoins.block.entity;
+package net.alerex.novacoins.block.entity;
 
-import alerex.novacoins.NovaCoins;
-import alerex.novacoins.recipe.CoinRecipe;
-import alerex.novacoins.screen.CoinFurnaceScreenHandler;
+import net.alerex.novacoins.recipe.CoinRecipe;
+import net.alerex.novacoins.screen.CoinFurnaceScreenHandler;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

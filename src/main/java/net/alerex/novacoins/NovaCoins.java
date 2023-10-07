@@ -1,9 +1,9 @@
-package alerex.novacoins;
+package net.alerex.novacoins;
 
-import alerex.novacoins.block.ModBlocks;
-import alerex.novacoins.block.entity.ModBlockEntities;
-import alerex.novacoins.recipe.ModRecipes;
-import alerex.novacoins.screen.ModScreenHandlers;
+import net.alerex.novacoins.block.ModBlocks;
+import net.alerex.novacoins.block.entity.ModBlockEntities;
+import net.alerex.novacoins.recipe.ModRecipes;
+import net.alerex.novacoins.screen.ModScreenHandlers;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
