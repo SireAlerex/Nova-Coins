@@ -8,6 +8,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,17 +19,29 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
-public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
 	protected final PropertyDelegate propertyDelegate;
 	private int progress = 0;
 	private int maxProgress = 100;
 	private int fuelTicks = 0;
+
+	@Override
+	public int[] getAvailableSlots(Direction side) {
+		int[] result = new int[1];
+		result[0] = switch (side) {
+			case UP -> 0;
+			case DOWN -> 1;
+			default -> 2;
+		};
+		return result;
+	}
 
 	public CoinFurnaceEntity(BlockPos pos, BlockState state) {
 		super(ModBlockEntities.COIN_FURNACE, pos, state);
@@ -99,7 +112,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		if (world.isClient()) {
 			return;
 		}
-		entity.fuelTicks = entity.fuelTicks == 0? 0 : entity.fuelTicks-1;
+		entity.fuelTicks = Integer.max(0, entity.fuelTicks-1);
 
 		if (hasRecipe(entity)) {
 			if (entity.fuelTicks == 0) {
@@ -122,13 +135,12 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 	}
 
 	private static void craftItem(CoinFurnaceEntity entity) {
-		SimpleInventory inventory = getInventory(entity);
 		World world = entity.getWorld();
-
 		if (world == null) {
 			return;
 		}
 
+		SimpleInventory inventory = getInventory(entity);
 		Optional<CoinRecipe> firstMatch = world.getRecipeManager()
 				.getFirstMatch(CoinRecipe.Type.INSTANCE, inventory, entity.getWorld());
 
@@ -178,5 +190,3 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		return inventory.getStack(1).getMaxCount() >= inventory.getStack(1).getCount() + amount;
 	}
 }
-
-
