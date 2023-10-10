@@ -1,5 +1,6 @@
 package net.alerex.novacoins.screen;
 
+import net.alerex.novacoins.block.entity.CoinFurnaceEntity;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,7 +19,7 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 	private final PropertyDelegate propertyDelegate;
 
 	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory) {
-		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(3));
+		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(4));
 	}
 
 	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
@@ -51,10 +52,15 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 			newStack = originalStack.copy();
 			// from furnace to player inventory
 			if (invSlot < this.inventory.size()) {
+				int originalCount = originalStack.getCount();
 				if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-				// from player inventory to furnace
+				int diff = originalCount - slot.getStack().getCount();
+				if (diff > 0) {
+					dropExperience(player, diff);
+				}
+			// from player inventory to furnace
 			} else {
 				if (FuelRegistry.INSTANCE.get(slot.getStack().getItem()) != null) {
 					if (!this.insertItem(originalStack, 2, 3, false)) {
@@ -97,7 +103,8 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 
 	@Override
 	public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
-		if (slotIndex == 1 && !this.getCursorStack().isOf(Items.AIR) && actionType != SlotActionType.QUICK_MOVE) {
+		if (slotIndex == 1) {
+			if (!this.getCursorStack().isOf(Items.AIR) && actionType != SlotActionType.QUICK_MOVE) {
 				ItemStack cursorItem = this.getCursorStack();
 				ItemStack slotItem = this.slots.get(slotIndex).getStack();
 				if (cursorItem.isOf(slotItem.getItem())) {
@@ -109,9 +116,25 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 					}
 					cursorItem.increment(amount);
 					this.slots.get(slotIndex).takeStack(amount);
+					dropExperience(player, amount);
 				}
-				return;
+			} else {
+				Slot slot = this.slots.get(slotIndex);
+				int originalCount = slot.getStack().getCount();
+				super.onSlotClick(slotIndex, button, actionType, player);
+				int diff = originalCount - slot.getStack().getCount();
+				if (diff > 0) {
+					dropExperience(player, diff);
+				}
+			}
+			return;
 		}
 		super.onSlotClick(slotIndex, button, actionType, player);
+	}
+
+	private void dropExperience(PlayerEntity player, int amount) {
+		int craftCount = propertyDelegate.get(3);
+		propertyDelegate.set(3, craftCount - amount);
+		player.addExperience(CoinFurnaceEntity.getExperienceFromCraftCount(amount));
 	}
 }

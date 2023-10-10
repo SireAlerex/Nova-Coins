@@ -5,6 +5,7 @@ import net.alerex.novacoins.screen.CoinFurnaceScreenHandler;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -16,10 +17,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +35,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 	private int progress = 0;
 	private int maxProgress = 100;
 	private int fuelTicks = 0;
+	private int craftCount = 0;
 
 	@Override
 	public int[] getAvailableSlots(Direction side) {
@@ -52,6 +57,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 					case 0 -> CoinFurnaceEntity.this.progress;
 					case 1 -> CoinFurnaceEntity.this.maxProgress;
 					case 2 -> CoinFurnaceEntity.this.fuelTicks;
+					case 3 -> CoinFurnaceEntity.this.craftCount;
 					default -> 0;
 				};
 			}
@@ -62,12 +68,13 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 					case 0 -> CoinFurnaceEntity.this.progress = value;
 					case 1 -> CoinFurnaceEntity.this.maxProgress = value;
 					case 2 -> CoinFurnaceEntity.this.fuelTicks = value;
+					case 3 -> CoinFurnaceEntity.this.craftCount = value;
 				}
 			}
 
 			@Override
 			public int size() {
-				return 3;
+				return 4;
 			}
 		};
 	}
@@ -94,6 +101,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		Inventories.writeNbt(nbt, inventory);
 		nbt.putInt("coin_block.progress", progress);
 		nbt.putInt("coin_block.fuelTicks", fuelTicks);
+		nbt.putInt("coin_block.craftCount", craftCount);
 	}
 
 	@Override
@@ -102,6 +110,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		super.readNbt(nbt);
 		progress = nbt.getInt("coin_block.progress");
 		fuelTicks = nbt.getInt("coin_block.fuelTicks");
+		craftCount = nbt.getInt("coin_block.craftCount");
 	}
 
 	private void resetProgress() {
@@ -154,6 +163,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 			entity.setStack(1, new ItemStack(recipe.getRawOutput().getItem(),
 					entity.getStack(1).getCount() + recipe.getRawOutput().getCount()));
 			entity.resetProgress();
+			entity.craftCount += 1;
 		}
 	}
 
@@ -188,5 +198,25 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 
 	private static boolean canInsertAmountInOutput(SimpleInventory inventory, int amount) {
 		return inventory.getStack(1).getMaxCount() >= inventory.getStack(1).getCount() + amount;
+	}
+
+	public static int getExperienceFromCraftCount(int amount) {
+		float xp = (float) (0.7 * amount);
+		int wholeXp = MathHelper.floor(xp);
+		float f = MathHelper.fractionalPart(xp);
+
+		if (f != 0.0F && Math.random() < (double)f) {
+			++wholeXp;
+		}
+		return Integer.max(wholeXp, 0); // be sure no negative xp
+	}
+
+	public void dropExperience(ServerWorld world, Vec3d pos) {
+		ExperienceOrbEntity.spawn(world, pos, getExperienceFromCraftCount(this.craftCount));
+		this.craftCount = 0;
+	}
+
+	public void resetCraftCount() {
+		this.craftCount = 0;
 	}
 }
