@@ -13,13 +13,14 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.util.math.MathHelper;
 
 public class CoinFurnaceScreenHandler extends ScreenHandler {
 	private final Inventory inventory;
 	private final PropertyDelegate propertyDelegate;
 
 	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory) {
-		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(4));
+		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(5));
 	}
 
 	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
@@ -41,6 +42,10 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 
 	public boolean isCrafting() {
 		return propertyDelegate.get(0) > 0;
+	}
+
+	public boolean isBurning() {
+		return propertyDelegate.get(2) > 0;
 	}
 
 	@Override
@@ -136,5 +141,21 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 		int craftCount = propertyDelegate.get(3);
 		propertyDelegate.set(3, craftCount - amount);
 		player.addExperience(CoinFurnaceEntity.getExperienceFromCraftCount(amount));
+	}
+
+	public int getScaledProgress() {
+		int progress = this.propertyDelegate.get(0);
+		int maxProgress = this.propertyDelegate.get(1);
+		int progressArrowSize = 16; // width of arrow
+
+		return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+	}
+
+	public int getScaledBurning() {
+		float fuelTicks = (float)this.propertyDelegate.get(2);
+		float maxFuelTicks = (float)this.propertyDelegate.get(4);
+		float progressArrowSize = 13; // height of flames
+
+		return maxFuelTicks != 0 && fuelTicks != 0 ? MathHelper.ceil(fuelTicks * progressArrowSize / maxFuelTicks) : 0;
 	}
 }

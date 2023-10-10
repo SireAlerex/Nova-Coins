@@ -36,6 +36,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 	private int maxProgress = 100;
 	private int fuelTicks = 0;
 	private int craftCount = 0;
+	private int lastFuelMax = 0;
 
 	@Override
 	public int[] getAvailableSlots(Direction side) {
@@ -58,6 +59,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 					case 1 -> CoinFurnaceEntity.this.maxProgress;
 					case 2 -> CoinFurnaceEntity.this.fuelTicks;
 					case 3 -> CoinFurnaceEntity.this.craftCount;
+					case 4 -> CoinFurnaceEntity.this.lastFuelMax;
 					default -> 0;
 				};
 			}
@@ -69,12 +71,13 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 					case 1 -> CoinFurnaceEntity.this.maxProgress = value;
 					case 2 -> CoinFurnaceEntity.this.fuelTicks = value;
 					case 3 -> CoinFurnaceEntity.this.craftCount = value;
+					case 4 -> CoinFurnaceEntity.this.lastFuelMax = value;
 				}
 			}
 
 			@Override
 			public int size() {
-				return 4;
+				return 5;
 			}
 		};
 	}
@@ -102,6 +105,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		nbt.putInt("coin_block.progress", progress);
 		nbt.putInt("coin_block.fuelTicks", fuelTicks);
 		nbt.putInt("coin_block.craftCount", craftCount);
+		nbt.putInt("coin_block.lastFuelMax", lastFuelMax);
 	}
 
 	@Override
@@ -111,6 +115,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		progress = nbt.getInt("coin_block.progress");
 		fuelTicks = nbt.getInt("coin_block.fuelTicks");
 		craftCount = nbt.getInt("coin_block.craftCount");
+		lastFuelMax = nbt.getInt("coin_block.lastFuelMax");
 	}
 
 	private void resetProgress() {
@@ -129,6 +134,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 				Integer ticks = FuelRegistry.INSTANCE.get(fuel);
 				if (ticks != null) {
 					entity.fuelTicks = ticks/2;
+					entity.lastFuelMax = ticks/2;
 					entity.removeStack(2, 1);
 				}
 			}
