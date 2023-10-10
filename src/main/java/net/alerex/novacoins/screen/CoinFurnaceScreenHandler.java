@@ -6,10 +6,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 
 public class CoinFurnaceScreenHandler extends ScreenHandler {
 	private final Inventory inventory;
@@ -91,5 +93,25 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(playerInventory, i, 8 + i*18, 142));
 		}
+	}
+
+	@Override
+	public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
+		if (slotIndex == 1 && !this.getCursorStack().isOf(Items.AIR) && actionType != SlotActionType.QUICK_MOVE) {
+				ItemStack cursorItem = this.getCursorStack();
+				ItemStack slotItem = this.slots.get(slotIndex).getStack();
+				if (cursorItem.isOf(slotItem.getItem())) {
+					int amount;
+					if (cursorItem.getCount() + slotItem.getCount() <= cursorItem.getMaxCount()) {
+						amount = slotItem.getCount();
+					} else {
+						amount = cursorItem.getMaxCount() - cursorItem.getCount();
+					}
+					cursorItem.increment(amount);
+					this.slots.get(slotIndex).takeStack(amount);
+				}
+				return;
+		}
+		super.onSlotClick(slotIndex, button, actionType, player);
 	}
 }
