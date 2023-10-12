@@ -1,5 +1,6 @@
 package net.alerex.novacoins.block.entity;
 
+import net.alerex.novacoins.block.custom.CoinFurnace;
 import net.alerex.novacoins.recipe.CoinRecipe;
 import net.alerex.novacoins.screen.CoinFurnaceScreenHandler;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -89,7 +90,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 
 	@Override
 	public Text getDisplayName() {
-		return Text.literal("Coin Furnace");
+		return Text.translatable("block.novacoins.coin_furnace");
 	}
 
 	@Nullable
@@ -122,10 +123,15 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		this.progress = 0;
 	}
 
+	private boolean isBurning() {
+		return this.fuelTicks > 0;
+	}
+
 	public static void tick(World world, BlockPos blockPos, BlockState blockState, CoinFurnaceEntity entity) {
 		if (world.isClient()) {
 			return;
 		}
+		boolean burningAtStart = entity.isBurning();
 		entity.fuelTicks = Integer.max(0, entity.fuelTicks-1);
 
 		if (hasRecipe(entity)) {
@@ -145,6 +151,12 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 			}
 		} else {
 			entity.resetProgress();
+			markDirty(world, blockPos, blockState);
+		}
+
+		if (burningAtStart != entity.isBurning()) {
+			blockState = blockState.with(CoinFurnace.LIT, entity.isBurning());
+			world.setBlockState(blockPos, blockState, 3);
 			markDirty(world, blockPos, blockState);
 		}
 	}

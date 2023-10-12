@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/orientable",
   "textures": {
-    "front": "novacoins:block/coin_furnace_front",
+    "front": "novacoins:block/coin_furnace_front_on",
     "side": "novacoins:block/coin_furnace_side",
     "top": "novacoins:block/coin_furnace_top"
   }
