@@ -62,8 +62,12 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 					return ItemStack.EMPTY;
 				}
 				int diff = originalCount - slot.getStack().getCount();
-				if (diff > 0) {
-					dropExperience(player, diff);
+				if (invSlot == 1 && diff > 0) {
+					if (propertyDelegate.get(3) != originalCount) {
+						dropExperienceHopper(player, diff, originalCount);
+					} else {
+						dropExperience(player, diff);
+					}
 				}
 			// from player inventory to furnace
 			} else {
@@ -83,7 +87,6 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 				slot.markDirty();
 			}
 		}
-
 		return newStack;
 	}
 
@@ -108,8 +111,8 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 
 	@Override
 	public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
-		if (slotIndex == 1) {
-			if (!this.getCursorStack().isOf(Items.AIR) && actionType != SlotActionType.QUICK_MOVE) {
+		if (slotIndex == 1 && actionType != SlotActionType.QUICK_MOVE) {
+			if (!this.getCursorStack().isOf(Items.AIR)) {
 				ItemStack cursorItem = this.getCursorStack();
 				ItemStack slotItem = this.slots.get(slotIndex).getStack();
 				if (cursorItem.isOf(slotItem.getItem())) {
@@ -141,6 +144,14 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 		int craftCount = propertyDelegate.get(3);
 		propertyDelegate.set(3, craftCount - amount);
 		player.addExperience(CoinFurnaceEntity.getExperienceFromCraftCount(amount));
+	}
+
+	private void dropExperienceHopper(PlayerEntity player, int amount, int currentAmount) {
+		int craftCount = propertyDelegate.get(3);
+		int hoppers = craftCount - currentAmount;
+		int total = amount + hoppers;
+		propertyDelegate.set(3, craftCount - total);
+		player.addExperience(CoinFurnaceEntity.getExperienceFromCraftCount(total));
 	}
 
 	public int getScaledProgress() {

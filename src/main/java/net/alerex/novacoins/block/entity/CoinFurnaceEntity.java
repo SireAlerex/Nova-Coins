@@ -222,7 +222,6 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		float xp = (float) (0.7 * amount);
 		int wholeXp = MathHelper.floor(xp);
 		float f = MathHelper.fractionalPart(xp);
-
 		if (f != 0.0F && Math.random() < (double)f) {
 			++wholeXp;
 		}
