@@ -76,7 +76,7 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 						return ItemStack.EMPTY;
 					}
 				}
-				if (!this.insertItem(originalStack, 0, 1, false)) {
+				else if (!this.insertItem(originalStack, 0, 1, false)) {
 					return ItemStack.EMPTY;
 				}
 			}

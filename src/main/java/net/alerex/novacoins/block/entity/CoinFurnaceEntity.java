@@ -194,7 +194,7 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 		SimpleInventory inventory = getInventory(entity);
 
 		Optional<CoinRecipe> match = world.getRecipeManager()
-				.getFirstMatch(CoinRecipe.Type.INSTANCE, inventory, entity.getWorld());
+				.getFirstMatch(CoinRecipe.Type.INSTANCE, inventory, world);
 
 		return match.isPresent()
 				&& canInsertAmountInOutput(inventory, match.get().getRawOutput().getCount())
