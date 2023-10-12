@@ -155,11 +155,11 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 	}
 
 	public int getScaledProgress() {
-		int progress = this.propertyDelegate.get(0);
-		int maxProgress = this.propertyDelegate.get(1);
-		int progressArrowSize = 16; // width of arrow
+		float progress = (float)this.propertyDelegate.get(0);
+		float maxProgress = (float)this.propertyDelegate.get(1);
+		float progressArrowSize = 23; // width of arrow
 
-		return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+		return maxProgress != 0 && progress != 0 ? MathHelper.ceil(progress * progressArrowSize / maxProgress) : 0;
 	}
 
 	public int getScaledBurning() {
