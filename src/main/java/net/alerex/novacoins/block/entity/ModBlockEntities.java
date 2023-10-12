@@ -14,7 +14,7 @@ public class ModBlockEntities {
 	public static void registerBlockEntities() {
 		NovaCoins.LOGGER.info("Registering Mod Block Entities for " + NovaCoins.MOD_ID);
 		COIN_FURNACE = Registry.register(Registries.BLOCK_ENTITY_TYPE,
-				new Identifier(NovaCoins.MOD_ID, "coin_block"),
+				new Identifier(NovaCoins.MOD_ID, "coin_furnace"),
 				FabricBlockEntityTypeBuilder.create(CoinFurnaceEntity::new, ModBlocks.COIN_FURNACE).build());
 	}
 }

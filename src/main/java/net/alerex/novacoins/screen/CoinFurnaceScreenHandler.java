@@ -24,7 +24,7 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 	}
 
 	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-		super(ModScreenHandlers.COIN_BLOCK_SCREEN_HANDLER, syncId);
+		super(ModScreenHandlers.COIN_FURNACE_SCREEN_HANDLER, syncId);
 		checkSize(inventory, 3);
 		this.inventory = inventory;
 		inventory.onOpen(playerInventory.player);

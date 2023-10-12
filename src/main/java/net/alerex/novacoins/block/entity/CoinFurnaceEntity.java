@@ -103,20 +103,20 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 	protected void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 		Inventories.writeNbt(nbt, inventory);
-		nbt.putInt("coin_block.progress", progress);
-		nbt.putInt("coin_block.fuelTicks", fuelTicks);
-		nbt.putInt("coin_block.craftCount", craftCount);
-		nbt.putInt("coin_block.lastFuelMax", lastFuelMax);
+		nbt.putInt("coin_furnace.progress", progress);
+		nbt.putInt("coin_furnace.fuelTicks", fuelTicks);
+		nbt.putInt("coin_furnace.craftCount", craftCount);
+		nbt.putInt("coin_furnace.lastFuelMax", lastFuelMax);
 	}
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		Inventories.readNbt(nbt, inventory);
 		super.readNbt(nbt);
-		progress = nbt.getInt("coin_block.progress");
-		fuelTicks = nbt.getInt("coin_block.fuelTicks");
-		craftCount = nbt.getInt("coin_block.craftCount");
-		lastFuelMax = nbt.getInt("coin_block.lastFuelMax");
+		progress = nbt.getInt("coin_furnace.progress");
+		fuelTicks = nbt.getInt("coin_furnace.fuelTicks");
+		craftCount = nbt.getInt("coin_furnace.craftCount");
+		lastFuelMax = nbt.getInt("coin_furnace.lastFuelMax");
 	}
 
 	private void resetProgress() {

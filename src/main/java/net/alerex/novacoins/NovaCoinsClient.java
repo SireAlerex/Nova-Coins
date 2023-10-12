@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 public class NovaCoinsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-		HandledScreens.register(ModScreenHandlers.COIN_BLOCK_SCREEN_HANDLER, CoinFurnaceScreen::new);
+		HandledScreens.register(ModScreenHandlers.COIN_FURNACE_SCREEN_HANDLER, CoinFurnaceScreen::new);
 	}
 }
 
