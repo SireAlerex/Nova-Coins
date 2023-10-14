@@ -1,5 +1,6 @@
 package net.alerex.novacoins.block.custom;
 
+import net.alerex.novacoins.NovaCoins;
 import net.alerex.novacoins.block.entity.CoinFurnaceEntity;
 import net.alerex.novacoins.block.entity.ModBlockEntities;
 import net.minecraft.block.*;
@@ -57,6 +58,7 @@ public class CoinFurnace extends BlockWithEntity implements BlockEntityProvider 
 
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		NovaCoins.LOGGER.info("CoinFurnace: onStateReplaced state="+state+" pos="+pos+" newState="+newState+" moved="+moved);
 		if (state.getBlock() != newState.getBlock()) {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
 			if (blockEntity instanceof CoinFurnaceEntity coinFurnace) {
@@ -71,6 +73,7 @@ public class CoinFurnace extends BlockWithEntity implements BlockEntityProvider 
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult result) {
+		NovaCoins.LOGGER.info("CoinFurnace: onUse state="+state+" pos="+pos+" blockHitResult="+result);
 		if (!world.isClient) {
 			NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
