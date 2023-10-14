@@ -1,6 +1,7 @@
 package net.alerex.novacoins.recipe;
 
 import com.google.gson.*;
+import net.alerex.novacoins.NovaCoins;
 import net.alerex.novacoins.util.*;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
 
 public class CoinRecipe implements Recipe<SimpleInventory> {
 	private final Identifier id;
@@ -64,6 +67,9 @@ public class CoinRecipe implements Recipe<SimpleInventory> {
 
 		@Override
 		public CoinRecipe read(Identifier id, JsonObject json) {
+			if (json.toString().isEmpty()) {
+				throw new JsonSyntaxException("Empty JSON object");
+			}
 			Gson gson = new Gson();
 
 			ItemStack output = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "output"));
@@ -95,13 +101,10 @@ public class CoinRecipe implements Recipe<SimpleInventory> {
 
 		@Override
 		public CoinRecipe read(Identifier id, PacketByteBuf buf) {
+			NovaCoins.LOGGER.info("CoinRecipe: reading packet for id="+id);
 			DefaultedList<IngredientStack> inputs = DefaultedList.ofSize(buf.readInt(), new IngredientStack(Ingredient.EMPTY, 0));
 
-			for (int i = 0; i < inputs.size(); i++) {
-				Ingredient ing = Ingredient.fromPacket(buf);
-				Integer count = buf.readInt();
-				inputs.set(1, new IngredientStack(ing, count));
-			}
+			inputs.replaceAll(ignored -> new IngredientStack(Ingredient.fromPacket(buf), buf.readInt()));
 
 			ItemStack output = buf.readItemStack();
 			return new CoinRecipe(id, output, inputs);
@@ -109,6 +112,7 @@ public class CoinRecipe implements Recipe<SimpleInventory> {
 
 		@Override
 		public void write(PacketByteBuf buf, CoinRecipe recipe) {
+			NovaCoins.LOGGER.info("CoinRecipe: writing packet for recipe="+recipe+" id="+recipe.id+" output="+recipe.output + " ingredients="+recipe.recipeItems);
 			buf.writeInt(recipe.getIngredientStacks().size());
 			for (IngredientStack ing : recipe.getIngredientStacks()) {
 				ing.getIngredient().write(buf);
