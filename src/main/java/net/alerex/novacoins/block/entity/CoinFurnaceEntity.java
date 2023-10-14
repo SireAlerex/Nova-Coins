@@ -4,6 +4,7 @@ import net.alerex.novacoins.block.custom.CoinFurnace;
 import net.alerex.novacoins.recipe.CoinRecipe;
 import net.alerex.novacoins.screen.CoinFurnaceScreenHandler;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ExperienceOrbEntity;
@@ -15,9 +16,14 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -30,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
-public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
+public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory, ExtendedScreenHandlerFactory {
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
 	protected final PropertyDelegate propertyDelegate;
 	private int progress = 0;
@@ -41,13 +47,13 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 
 	@Override
 	public int[] getAvailableSlots(Direction side) {
-		int[] result = new int[1];
-		result[0] = switch (side) {
-			case UP -> 0;
-			case DOWN -> 1;
-			default -> 2;
+		return new int[] {
+				switch (side) {
+					case UP -> 0;
+					case DOWN -> 1;
+					default -> 2;
+			}
 		};
-		return result;
 	}
 
 	public CoinFurnaceEntity(BlockPos pos, BlockState state) {
@@ -111,8 +117,8 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
-		Inventories.readNbt(nbt, inventory);
 		super.readNbt(nbt);
+		Inventories.readNbt(nbt, inventory);
 		progress = nbt.getInt("coin_furnace.progress");
 		fuelTicks = nbt.getInt("coin_furnace.fuelTicks");
 		craftCount = nbt.getInt("coin_furnace.craftCount");
@@ -235,5 +241,29 @@ public class CoinFurnaceEntity extends BlockEntity implements NamedScreenHandler
 
 	public void resetCraftCount() {
 		this.craftCount = 0;
+	}
+
+	@Override
+	public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+		buf.writeBlockPos(this.pos);
+	}
+
+	@Override
+	public void markDirty() {
+		if (world != null) {
+			world.updateListeners(pos, getCachedState(), getCachedState(), 3);
+		}
+		super.markDirty();
+	}
+
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		return createNbt();
+	}
+
+	@Nullable
+	@Override
+	public Packet<ClientPlayPacketListener> toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
 	}
 }

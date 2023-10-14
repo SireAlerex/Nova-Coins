@@ -2,12 +2,14 @@ package net.alerex.novacoins.screen;
 
 import net.alerex.novacoins.block.entity.CoinFurnaceEntity;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -18,6 +20,27 @@ import net.minecraft.util.math.MathHelper;
 public class CoinFurnaceScreenHandler extends ScreenHandler {
 	private final Inventory inventory;
 	private final PropertyDelegate propertyDelegate;
+
+	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
+		this(syncId, playerInventory, playerInventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(5));
+	}
+
+	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory, BlockEntity blockEntity, ArrayPropertyDelegate propertyDelegate) {
+		super(ModScreenHandlers.COIN_FURNACE_SCREEN_HANDLER, syncId);
+		checkSize((Inventory) blockEntity, 3);
+		this.inventory = (Inventory) blockEntity;
+		inventory.onOpen(playerInventory.player);
+		this.propertyDelegate = propertyDelegate;
+
+		this.addSlot(new Slot(inventory, 0, 56, 17));  // input
+		this.addSlot(new Slot(inventory, 1, 116, 35));  // output
+		this.addSlot(new Slot(inventory, 2, 56, 53)); // fuel
+
+		addPlayerInventory(playerInventory);
+		addPlayerHotbar(playerInventory);
+
+		addProperties(propertyDelegate);
+	}
 
 	public CoinFurnaceScreenHandler(int syncId, PlayerInventory playerInventory) {
 		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(5));
