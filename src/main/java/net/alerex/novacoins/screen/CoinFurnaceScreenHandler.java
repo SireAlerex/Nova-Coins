@@ -3,6 +3,7 @@ package net.alerex.novacoins.screen;
 import net.alerex.novacoins.block.entity.CoinFurnaceEntity;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -15,6 +16,7 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class CoinFurnaceScreenHandler extends ScreenHandler {
@@ -166,7 +168,8 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 	private void dropExperience(PlayerEntity player, int amount) {
 		int craftCount = propertyDelegate.get(3);
 		propertyDelegate.set(3, craftCount - amount);
-		player.addExperience(CoinFurnaceEntity.getExperienceFromCraftCount(amount));
+
+		xp(player, CoinFurnaceEntity.getExperienceFromCraftCount(amount));
 	}
 
 	private void dropExperienceHopper(PlayerEntity player, int amount, int currentAmount) {
@@ -174,7 +177,16 @@ public class CoinFurnaceScreenHandler extends ScreenHandler {
 		int hoppers = craftCount - currentAmount;
 		int total = amount + hoppers;
 		propertyDelegate.set(3, craftCount - total);
-		player.addExperience(CoinFurnaceEntity.getExperienceFromCraftCount(total));
+
+		xp(player, CoinFurnaceEntity.getExperienceFromCraftCount(total));
+	}
+
+	private void xp(PlayerEntity player, int amount) {
+		if (player instanceof ServerPlayerEntity) {
+			ExperienceOrbEntity.spawn(((ServerPlayerEntity) player).getServerWorld(), player.getPos(), amount);
+		} else {
+			player.addExperience(amount);
+		}
 	}
 
 	public int getScaledProgress() {
