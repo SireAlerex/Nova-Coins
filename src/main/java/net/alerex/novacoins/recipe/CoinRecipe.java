@@ -126,6 +126,16 @@ public class CoinRecipe implements Recipe<SimpleInventory> {
 		return this.recipeItems;
 	}
 
+	@Override
+	public DefaultedList<Ingredient> getIngredients() {
+		DefaultedList<Ingredient> list = DefaultedList.of();
+		for (IngredientStack ing : this.getIngredientStacks()) {
+			list.add(ing.getIngredient());
+		}
+
+		return list;
+	}
+
 	public ItemStack getRawOutput() {
 		return output.copy();
 	}
