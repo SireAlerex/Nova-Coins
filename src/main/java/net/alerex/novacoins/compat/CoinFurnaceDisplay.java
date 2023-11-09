@@ -5,11 +5,11 @@ import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.alerex.novacoins.recipe.CoinRecipe;
-import net.minecraft.recipe.Ingredient;
+import net.alerex.novacoins.util.IngredientStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,15 +20,20 @@ public class CoinFurnaceDisplay extends BasicDisplay {
 
 	public CoinFurnaceDisplay(CoinRecipe recipe) {
 		this(EntryIngredients.ofIngredients(recipe.getIngredients()),
-				Collections.singletonList(EntryIngredients.of(recipe.getOutput(BasicDisplay.registryAccess()))),
+				getInputAndOutputList(recipe),
 				Optional.ofNullable(recipe.getId()));
 	}
 
+	private static List<EntryIngredient> getInputAndOutputList(CoinRecipe recipe) {
+		ArrayList<EntryIngredient> list = new ArrayList<>();
 
-	private static List<EntryIngredient> getInputList(CoinRecipe recipe) {
-		if(recipe == null) return Collections.emptyList();
-		List<EntryIngredient> list = new ArrayList<>();
-		list.add(EntryIngredients.ofIngredient(recipe.getIngredients().get(0)));
+		IngredientStack ing_stack = recipe.getIngredientStacks().get(0);
+		ItemStack x = ing_stack.getIngredient().getMatchingStacks()[0];
+		x.setCount(ing_stack.getCount());
+		list.add(EntryIngredients.of(x));
+
+		list.add(EntryIngredients.of(recipe.getRawOutput()));
+
 		return list;
 	}
 
@@ -36,4 +41,6 @@ public class CoinFurnaceDisplay extends BasicDisplay {
 	public CategoryIdentifier<?> getCategoryIdentifier() {
 		return CoinFurnaceCategory.COIN_FURNACE;
 	}
+
+
 }

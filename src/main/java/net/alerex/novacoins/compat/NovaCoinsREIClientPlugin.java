@@ -20,10 +20,8 @@ public class NovaCoinsREIClientPlugin implements REIClientPlugin {
 
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
-		registry.registerRecipeFiller(CoinRecipe.class, CoinRecipe.Type.INSTANCE,
+		registry.registerFiller(CoinRecipe.class,
 				CoinFurnaceDisplay::new);
-//		registry.registerFiller(CoinRecipe.class,
-//				CoinFurnaceDisplay::new);
 	}
 
 	@Override
